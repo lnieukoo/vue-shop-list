@@ -1,10 +1,12 @@
 Vue.component('todo-list', {
     template:`
         <div id='todo-list'>
-            <section>
+            <section class="hero">
+            <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class='title'>Shopping List</h1>
                 <todo-items></todo-items>
+            </div>
             </div>
             </section>
         </div>
@@ -26,7 +28,16 @@ Vue.component('todo-items' , {
         },
     },
     mounted() {
-    },
+            localStorage.show ? this.show = JSON.parse(localStorage.show) : null
+            localStorage.checked_items_count ? this.checked_items_count = JSON.parse(localStorage.checked_items_count) : null
+            this.items = JSON.parse(localStorage.getItem("items") || "[]");
+
+            for(i in this.items){
+                //this.items[i].show = JSON.parse(this.items[i].show)
+                console.log(typeof(this.items[i].show))
+            }
+
+          },
     methods: {
         deleteItem(index){
             this.items[index].complete ? this.checked_items_count -= 1 : null
@@ -74,12 +85,20 @@ Vue.component('todo-items' , {
     },
     watch: {
 
-        show(){
+        show(newShow){
                 
             for (item in this.items){
                 this.items[item].complete ? this.items[item].show = this.show : null
             }
-            
+
+            localStorage.show = newShow
+            localStorage.setItem("items", JSON.stringify(this.items));
+        },
+        checked_items_count(newCount){
+            localStorage.checked_items_count = newCount
+        },
+        items(newItems){
+            localStorage.setItem("items", JSON.stringify(newItems));
         }
     },
     
