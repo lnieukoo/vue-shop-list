@@ -1,11 +1,11 @@
-Vue.component('todo-list', {
+Vue.component('shop-list', {
     template:`
-        <div id='todo-list'>
+        <div id='shop-list'>
             <section class="hero">
             <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class='title'>Shopping List</h1>
-                <todo-items></todo-items>
+                <shop-items></shop-items>
             </div>
             </div>
             </section>
@@ -13,7 +13,7 @@ Vue.component('todo-list', {
     `
 })
 
-Vue.component('todo-items' , {
+Vue.component('shop-items' , {
     data: function() {
         return {
             items: [],
