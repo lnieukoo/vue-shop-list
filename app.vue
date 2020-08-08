@@ -17,10 +17,19 @@ Vue.component('todo-items' , {
             items: [],
             newitem: null,
             show: false,
+            checked_items_count: 0
         }
+    },
+    computed: {
+        itemCount(){
+            return this.items.length
+        },
+    },
+    mounted() {
     },
     methods: {
         deleteItem(index){
+            this.items[index].complete ? this.checked_items_count -= 1 : null
             this.items.splice(index, 1)
         },
         checkItem(index){
@@ -28,11 +37,13 @@ Vue.component('todo-items' , {
                 this.items[index].complete = false
                 this.items[index].show = true
                 this.moveItemFront(index)
+                this.checked_items_count -= 1
             }
             else{
                 this.items[index].complete = true
                 this.show ? this.items[index].show = true : this.items[index].show = false
                 this.moveItemEnd(index)
+                this.checked_items_count += 1
             } 
         },
         addItem(){
@@ -44,7 +55,7 @@ Vue.component('todo-items' , {
                     complete: false,
                     show: true
                 })
-            this.newitem = null }
+            this.newitem = null}
         },
         moveItemEnd(index){
             let move_item = this.items[index]
@@ -57,11 +68,13 @@ Vue.component('todo-items' , {
         },
         deleteAll(){
             this.items = []
+            this.checked_items_count = 0
         }
 
     },
     watch: {
-        show: function(){
+
+        show(){
                 
             for (item in this.items){
                 this.items[item].complete ? this.items[item].show = this.show : null
@@ -79,6 +92,7 @@ Vue.component('todo-items' , {
                     <span v-show="item.show">
                     <tr>
                     <td class="td-todo-60 v-centered">
+                        <p class="has-text-left"><small><em>item {{index+1}}</em></small></p>
                         <span class="is-capitalized" v-if="item.complete"><p><del>{{item.name}}</del></p></span>
                         <span class="is-capitalized" v-else><p>{{item.name}}</p></span>
                     </td>
@@ -97,10 +111,12 @@ Vue.component('todo-items' , {
             </span>
             </div>
             </table>
+            <p><small>{{checked_items_count}}/{{itemCount}} items checked</small></p>
         </div>
         <div v-else>
          <p>Please add an item to your shopping list</p>
         </div>
+        <br>
         <p class="potential-item" v-if="newitem">{{newitem}}</p>
         <br>
         <label class="checkbox">
@@ -108,7 +124,10 @@ Vue.component('todo-items' , {
             Show checked items
         </label>
         <br>
-        <input @keyup.enter="addItem()" class="input" v-model="newitem"><button @click="addItem()" class="button is-success"> Add </button>
+        <input @keyup.enter="addItem()" class="input" v-model="newitem">
+        <br>
+        <br>    
+        <button @click="addItem()" class="button is-success"> Add </button>
         <button @click="deleteAll()" class="button is-danger"> Delete All </button>
     </div>
 
